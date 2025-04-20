@@ -1,3 +1,9 @@
+if (process.platform !== "linux") {
+    console.log("🛑 OLED hardware skipped — not running on Raspberry Pi.");
+    module.exports = { updateOLED: () => {} };
+    return;
+}
+
 const i2c = require("i2c-bus");
 const OLED = require("oled-i2c-bus");
 

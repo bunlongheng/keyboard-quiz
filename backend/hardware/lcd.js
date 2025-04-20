@@ -1,3 +1,9 @@
+if (process.platform !== "linux") {
+    console.log("🛑 OLED hardware skipped — not running on Raspberry Pi.");
+    module.exports = { updateOLED: () => {} };
+    return;
+}
+
 const LCD = require("lcd");
 
 const lcd = new LCD({
