@@ -16,3 +16,15 @@ Run icon.py
 ..push 
 
 Vercel, add new project, deploy, wait 
+
+
+===
+
+
+pi2@norden-pi:~/keyboard-quiz/backend $ npm install
+-bash: npm: command not found
+
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
