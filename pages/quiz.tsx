@@ -1,4 +1,4 @@
-// pages/quiz.tsx — Layout update: 4 corners + huge key font
+// pages/quiz.tsx — Confetti only if passing
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Confetti from 'react-confetti';
@@ -29,6 +29,7 @@ export default function QuizPage() {
   const [lastKey, setLastKey] = useState<string>('');
 
   const currentQuestion: Question | undefined = questions[currentIndex];
+  const passingScore = (score / questions.length) * 100 >= 70;
 
   useEffect(() => {
     const stored = localStorage.getItem('sprunki');
@@ -72,14 +73,14 @@ export default function QuizPage() {
 
   return (
     <div
-      className="relative min-h-screen text-white p-6 flex items-center justify-center text-center"
+      className="relative min-h-screen text-white p-6 flex flex-col items-center justify-center text-center"
       style={{ backgroundColor: bgColor }}
     >
-      {/* 4 Corner Info */}
-      <div className="absolute top-4 left-4 text-sm text-white/90">Question {currentIndex + 1}/{questions.length}</div>
-      <div className="absolute top-4 right-4 text-sm text-white/90">Score: {(score / questions.length) * 100}%</div>
-      <div className="absolute bottom-4 left-4 text-sm text-white/90">Time left: {timeLeft}s</div>
-      <div className="absolute bottom-4 right-4 text-sm text-white/90">Key: {lastKey}</div>
+      {/* 4 Corner Info - now huge */}
+      <div className="absolute top-4 left-4 text-4xl font-bold text-white"> {currentIndex + 1}/{questions.length}</div>
+      <div className="absolute top-4 right-4 text-4xl font-bold text-white"> {(score / questions.length) * 100}%</div>
+      <div className="absolute bottom-4 left-4 text-4xl font-bold text-white">{timeLeft}s</div>
+      <div className="absolute bottom-4 right-4 text-4xl font-bold text-white">{lastKey}</div>
 
       {character && (
         <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
@@ -91,23 +92,27 @@ export default function QuizPage() {
             className="mb-2"
           />
           <p className="text-sm text-white/90">
-            Character: <span className="font-bold">{character.name}</span>
+           <span className="font-bold">{character.name}</span>
           </p>
         </div>
       )}
 
       {showResult ? (
         <>
-          <Confetti />
+          {passingScore && <Confetti />}
           <h1 className="text-4xl font-bold mb-4 text-green-400">🎉 Quiz Complete!</h1>
-          <p className={`text-2xl ${
-            (score / questions.length) * 100 >= 70 ? 'bg-green-600' : 'bg-red-600'
+          <p className={`text-4xl ${
+            passingScore ? 'bg-green-600' : 'bg-red-600'
           } text-white px-4 py-2 rounded`}>Score: {(score / questions.length) * 100}%</p>
         </>
       ) : currentQuestion ? (
-        <h2 className="text-[100px] font-extrabold text-yellow-100">
-          {currentQuestion.display}
-        </h2>
+        <>
+          <h2 className="text-[100px] font-extrabold text-yellow-100">
+            {currentQuestion.display}
+          </h2>
+          {feedback === 'correct' && <p className="text-green-300 text-3xl mt-4">✅ Correct!</p>}
+          {feedback === 'wrong' && <p className="text-red-300 text-3xl mt-4">❌ Wrong</p>}
+        </>
       ) : (
         <p className="text-red-400">⚠️ No question loaded.</p>
       )}
