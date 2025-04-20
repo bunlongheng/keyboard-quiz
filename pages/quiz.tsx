@@ -1,4 +1,4 @@
-// pages/quiz.tsx — Show selected character image + color theme
+// pages/quiz.tsx — Layout update: 4 corners + huge key font
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Confetti from 'react-confetti';
@@ -26,6 +26,7 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [character, setCharacter] = useState<Character | null>(null);
+  const [lastKey, setLastKey] = useState<string>('');
 
   const currentQuestion: Question | undefined = questions[currentIndex];
 
@@ -45,6 +46,7 @@ export default function QuizPage() {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (showResult || !currentQuestion) return;
+      setLastKey(e.key);
       const correct = e.key.toLowerCase() === currentQuestion.key.toLowerCase();
       setFeedback(correct ? 'correct' : 'wrong');
       if (correct) setScore((s) => s + 1);
@@ -70,11 +72,17 @@ export default function QuizPage() {
 
   return (
     <div
-      className="min-h-screen text-white p-6 flex flex-col items-center justify-center text-center"
+      className="relative min-h-screen text-white p-6 flex items-center justify-center text-center"
       style={{ backgroundColor: bgColor }}
     >
+      {/* 4 Corner Info */}
+      <div className="absolute top-4 left-4 text-sm text-white/90">Question {currentIndex + 1}/{questions.length}</div>
+      <div className="absolute top-4 right-4 text-sm text-white/90">Score: {(score / questions.length) * 100}%</div>
+      <div className="absolute bottom-4 left-4 text-sm text-white/90">Time left: {timeLeft}s</div>
+      <div className="absolute bottom-4 right-4 text-sm text-white/90">Key: {lastKey}</div>
+
       {character && (
-        <div className="flex flex-col items-center mb-6">
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
           <Image
             src={getImagePath(character.name)}
             alt={character.name}
@@ -97,18 +105,9 @@ export default function QuizPage() {
           } text-white px-4 py-2 rounded`}>Score: {(score / questions.length) * 100}%</p>
         </>
       ) : currentQuestion ? (
-        <div className="w-full max-w-md space-y-6">
-          <p className="text-white/80">Question {currentIndex + 1}/{questions.length}</p>
-          <h2 className="text-3xl font-bold">Press: <span className="text-yellow-200">{currentQuestion.display}</span></h2>
-
-          {feedback === 'correct' && <p className="text-green-100 text-xl">✅ Correct!</p>}
-          {feedback === 'wrong' && <p className="text-red-200 text-xl">❌ Wrong</p>}
-
-          <div className="text-sm text-white/80 space-y-1">
-            <p>Time left: {timeLeft}s</p>
-            <p>Score: {(score / questions.length) * 100}%</p>
-          </div>
-        </div>
+        <h2 className="text-[100px] font-extrabold text-yellow-100">
+          {currentQuestion.display}
+        </h2>
       ) : (
         <p className="text-red-400">⚠️ No question loaded.</p>
       )}
