@@ -15,3 +15,4 @@ Run icon.py
 
 ..push 
 
+Vercel, add new project, deploy, wait 

@@ -11,7 +11,10 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "i2c-bus": "^5.2.3",
+    "lcd": "^3.1.1",
     "next": "15.3.1",
+    "oled-i2c-bus": "^1.0.12",
     "react": "^19.0.0",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0"
