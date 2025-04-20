@@ -1,8 +1,22 @@
+// pages/quiz.tsx — Show selected character image + color theme
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Confetti from 'react-confetti';
 import fullSet from '../data/questions.json';
 
-const shuffled = [...fullSet].sort(() => Math.random() - 0.5).slice(0, 10); // 🔀 pick 10 random
+interface Question {
+  display: string;
+  key: string;
+}
+
+interface Character {
+  name: string;
+  type: string;
+  color: string;
+  initial?: string;
+}
+
+const shuffled = [...fullSet].sort(() => Math.random() - 0.5).slice(0, 10);
 
 export default function QuizPage() {
   const [questions] = useState(shuffled);
@@ -11,8 +25,14 @@ export default function QuizPage() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [showResult, setShowResult] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [character, setCharacter] = useState<Character | null>(null);
 
   const currentQuestion: Question | undefined = questions[currentIndex];
+
+  useEffect(() => {
+    const stored = localStorage.getItem('sprunki');
+    if (stored) setCharacter(JSON.parse(stored));
+  }, []);
 
   useEffect(() => {
     if (showResult) return;
@@ -44,8 +64,30 @@ export default function QuizPage() {
     return () => window.removeEventListener('keydown', handleKey);
   }, [currentQuestion, showResult]);
 
+  const bgColor = character?.color || '#0f172a';
+  const getImagePath = (name: string) =>
+    `/characters/sprunki/${name.replace(/\./g, '').replace(/\s+/g, ' ')}.svg`;
+
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center justify-center text-center">
+    <div
+      className="min-h-screen text-white p-6 flex flex-col items-center justify-center text-center"
+      style={{ backgroundColor: bgColor }}
+    >
+      {character && (
+        <div className="flex flex-col items-center mb-6">
+          <Image
+            src={getImagePath(character.name)}
+            alt={character.name}
+            width={64}
+            height={64}
+            className="mb-2"
+          />
+          <p className="text-sm text-white/90">
+            Character: <span className="font-bold">{character.name}</span>
+          </p>
+        </div>
+      )}
+
       {showResult ? (
         <>
           <Confetti />
@@ -56,13 +98,13 @@ export default function QuizPage() {
         </>
       ) : currentQuestion ? (
         <div className="w-full max-w-md space-y-6">
-          <p className="text-gray-400">Question {currentIndex + 1}/{questions.length}</p>
-          <h2 className="text-3xl font-bold">Press: <span className="text-yellow-300">{currentQuestion.display}</span></h2>
+          <p className="text-white/80">Question {currentIndex + 1}/{questions.length}</p>
+          <h2 className="text-3xl font-bold">Press: <span className="text-yellow-200">{currentQuestion.display}</span></h2>
 
-          {feedback === 'correct' && <p className="text-green-400 text-xl">✅ Correct!</p>}
-          {feedback === 'wrong' && <p className="text-red-400 text-xl">❌ Wrong</p>}
+          {feedback === 'correct' && <p className="text-green-100 text-xl">✅ Correct!</p>}
+          {feedback === 'wrong' && <p className="text-red-200 text-xl">❌ Wrong</p>}
 
-          <div className="text-sm text-gray-400 space-y-1">
+          <div className="text-sm text-white/80 space-y-1">
             <p>Time left: {timeLeft}s</p>
             <p>Score: {(score / questions.length) * 100}%</p>
           </div>
