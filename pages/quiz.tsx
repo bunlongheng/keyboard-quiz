@@ -1,14 +1,11 @@
-// pages/quiz.tsx — Modern dark theme + centered UI
 import { useEffect, useState } from 'react';
 import Confetti from 'react-confetti';
-import questions from '../data/questions.json';
+import fullSet from '../data/questions.json';
 
-interface Question {
-  display: string;
-  key: string;
-}
+const shuffled = [...fullSet].sort(() => Math.random() - 0.5).slice(0, 10); // 🔀 pick 10 random
 
 export default function QuizPage() {
+  const [questions] = useState(shuffled);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
