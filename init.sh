@@ -9,5 +9,9 @@ npx json -I -f package.json -e 'this.scripts.dev = "concurrently \\"next dev\\" 
 npm run dev 
 
 
+Generate a square image public/icon.png
+Run icon.py 
+
+
 ..push 
 
