@@ -1,0 +1,26 @@
+[
+    { "name": "Oren", "type": "Beats", "color": "#f97316" },
+    { "name": "Raddy", "type": "Beats", "color": "#ef4444" },
+    { "name": "Clukr", "type": "Beats", "color": "#facc15" },
+    { "name": "Fun Bot", "type": "Beats", "color": "#4f46e5" },
+    { "name": "Vineria", "type": "Beats", "color": "#22c55e" },
+
+    { "name": "Gray", "type": "Effects", "color": "#9ca3af" },
+    { "name": "Brud", "type": "Effects", "color": "#a855f7" },
+    { "name": "Garnold", "type": "Effects", "color": "#6b7280" },
+    { "name": "OWAKCX", "type": "Effects", "color": "#0ea5e9" },
+    { "name": "Sky", "type": "Effects", "color": "#38bdf8" },
+
+    { "name": "MrSun", "type": "Melody", "color": "#fde047" },
+    { "name": "Durple", "type": "Melody", "color": "#a78bfa" },
+    { "name": "MrTree", "type": "Melody", "color": "#4ade80" },
+    { "name": "Simon", "type": "Melody", "color": "#fcd34d" },
+    { "name": "Tunner", "type": "Melody", "color": "#34d399" },
+
+    { "name": "Funcomputer", "type": "Vocal", "color": "#3b82f6" },
+    { "name": "Wenda", "type": "Vocal", "color": "#f472b6" },
+    { "name": "Pinki", "type": "Vocal", "color": "#fb7185" },
+    { "name": "Jevin", "type": "Vocal", "color": "#1e40af" },
+    { "name": "Black", "type": "Vocal", "color": "#111827" }
+  
+]
