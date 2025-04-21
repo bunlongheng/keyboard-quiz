@@ -1,5 +1,4 @@
 import time
-import requests
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import board
@@ -9,69 +8,88 @@ from RPLCD.i2c import CharLCD
 
 class DisplayManager:
     def __init__(self):
-        # Initialize OLED
+        # Initialize OLED (time/date only)
         self.oled = None
-        self.oled_font = None
         try:
-            i2c_oled = busio.I2C(board.SCL, board.SDA)
-            self.oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c_oled)
+            i2c = busio.I2C(board.SCL, board.SDA)
+            self.oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
             self.oled_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
-            print("OLED initialized successfully")
+            print("OLED ready")
         except Exception as e:
-            print(f"OLED init failed: {e}")
+            print(f"OLED error: {e}")
 
-        # Initialize LCD
+        # Initialize LCD (with scrolling)
         self.lcd = None
         try:
             self.lcd = CharLCD('PCF8574', 0x27, cols=16, rows=2)
-            print("LCD initialized successfully")
+            self.birthday_messages = [
+                "Happy Birthday Mila!",
+                "You are awesome!",
+                "Let's celebrate!",
+                "Best wishes!",
+                "Party time!!!"
+            ]
+            self.current_message = 0
+            print("LCD ready")
         except Exception as e:
-            print(f"LCD init failed: {e}")
+            print(f"LCD error: {e}")
 
-    def get_weather(self):
-        CITY = "Pelham"
-        API_KEY = "your_openweathermap_api_key"
-        WEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&units=imperial&appid={API_KEY}"
-        
-        try:
-            r = requests.get(WEATHER_URL, timeout=5)
-            data = r.json()
-            temp = round(data["main"]["temp"])
-            desc = data["weather"][0]["main"]
-            return f"{temp}°F {desc}"
-        except:
-            return "Weather N/A"
-
-    def update_displays(self):
+    def update_oled(self):
+        if not self.oled:
+            return
+            
         now = datetime.now()
-        current_time = now.strftime("%I:%M:%S %p")
-        current_date = now.strftime("%b %d, %Y")
-        weather = self.get_weather()
+        image = Image.new("1", (128, 64))
+        draw = ImageDraw.Draw(image)
+        
+        # Bigger time font
+        time_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
+        draw.text((0, 5), now.strftime("%I:%M:%S %p"), font=time_font, fill=255)
+        draw.text((0, 30), now.strftime("%b %d, %Y"), font=self.oled_font, fill=255)
+        
+        self.oled.image(image)
+        self.oled.show()
 
-        # Update OLED
-        if self.oled:
-            try:
-                image = Image.new("1", (128, 64))
-                draw = ImageDraw.Draw(image)
-                draw.text((0, 0), f"Time: {current_time}", font=self.oled_font, fill=255)
-                draw.text((0, 20), f"Date: {current_date}", font=self.oled_font, fill=255)
-                draw.text((0, 40), weather, font=self.oled_font, fill=255)
-                self.oled.image(image)
-                self.oled.show()
-            except Exception as e:
-                print(f"OLED update failed: {e}")
+    def update_lcd(self):
+        if not self.lcd:
+            return
+            
+        self.lcd.clear()
+        
+        # ASCII cake art (alternates with messages)
+        if self.current_message % 2 == 0:
+            cake = [
+                "   _____   ",
+                "  |     |  ",
+                "  | ~ ~ |  ",
+                "  |_____|  ",
+                "  |     |  "
+            ]
+            self.lcd.write_string(cake[0] + "\n" + cake[1])
+        else:
+            # Scrolling message (center-aligned)
+            msg = self.birthday_messages[self.current_message % len(self.birthday_messages)]
+            padded_msg = f"{msg:^16}"  # Center-align
+            self.lcd.write_string(padded_msg + "\n")
+            self.lcd.write_string(" " * 16)  # Clear second line
+            
+        self.current_message += 1
 
-        # Update LCD
-        if self.lcd:
-            try:
-                self.lcd.clear()
-                self.lcd.write_string(f"{current_time}\n")
-                self.lcd.write_string(f"{current_date}")
-            except Exception as e:
-                print(f"LCD update failed: {e}")
+    def run(self):
+        while True:
+            self.update_oled()
+            self.update_lcd()
+            time.sleep(2)  # Faster updates for scrolling effect
 
 if __name__ == "__main__":
     manager = DisplayManager()
-    while True:
-        manager.update_displays()
-        time.sleep(30)  # Update every 30 seconds
+    
+    # Show startup animation
+    if manager.lcd:
+        manager.lcd.write_string("Starting up...\n")
+        for i in range(3):
+            manager.lcd.write_string("." * (i+1))
+            time.sleep(0.5)
+        manager.lcd.clear()
+    
+    manager.run()
