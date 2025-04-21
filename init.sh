@@ -34,3 +34,7 @@ sudo apt-get install -y nodejs
 Pi Only 
 
 echo "cd ~/keyboard-quiz && source venv/bin/activate" >> ~/.bashrc
+
+
+# clone 
+# git clone git@github.com:bunlongheng/keyboard-quiz.git
