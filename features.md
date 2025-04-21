@@ -10,7 +10,8 @@ Ex. Press A
 Wait for Norden to press A (if correct, show green, else show red x)
 
 OLED -
-Time left: 60s allow count down per question
+Selected char: Ex. Raddy
+Time took: since quiz started
 
 LCD -
 Question order : 2/10
@@ -25,3 +26,5 @@ play themesong on character selection page
 when over on the character, play its sound and it color Ex. Simon = Yellow
 Pass should be green bg and fail should be red on result page
 Questions should covers all the buttons in keyboard, the 80% one, it should random pick 10 of them
+
+---

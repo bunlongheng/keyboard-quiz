@@ -1,46 +1,55 @@
-# pi-server/app.py
-from flask import Flask, jsonify
-import platform
-import os
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+import time
+from display.oled import show_oled_status
+from display.lcd import show_lcd_status
 
-app = Flask(__name__)
+start_time = time.time()
 
-# Check if running on Raspberry Pi
-def is_raspberry_pi():
-    try:
-        # Method 1: Check device tree model
-        with open('/proc/device-tree/model', 'r') as f:
-            return 'Raspberry Pi' in f.read()
-    except:
+class QuizHandler(BaseHTTPRequestHandler):
+    def _set_headers(self, status=200):
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+    def do_GET(self):
+        if self.path == "/ping":
+            self._set_headers()
+            self.wfile.write(json.dumps({"status": "ok", "message": "pong"}).encode())
+
+    def do_POST(self):
+        length = int(self.headers.get('Content-Length', 0))
+        raw_data = self.rfile.read(length)
         try:
-            # Method 2: Check cpuinfo for BCM (Broadcom) chip
-            with open('/proc/cpuinfo', 'r') as f:
-                return 'BCM' in f.read()
-        except:
-            return False
+            data = json.loads(raw_data)
+        except json.JSONDecodeError:
+            self._set_headers(400)
+            self.wfile.write(json.dumps({"error": "Invalid JSON"}).encode())
+            return
 
-# Only import hardware modules if on Raspberry Pi
-if is_raspberry_pi():
-    from hardware.oled import OLEDDisplay
-    from hardware.lcd import LCDDisplay
-    
-    oled = OLEDDisplay()
-    lcd = LCDDisplay()
+        if self.path == "/update-status":
+            character = data.get("character", "Unknown")
+            current = data.get("current", 1)
+            total = data.get("total", 10)
+            correct = data.get("correct", 0)
 
-@app.route('/api/pi/display', methods=['POST'])
-def update_displays():
-    if not is_raspberry_pi():
-        return jsonify({"error": "Not running on Raspberry Pi"}), 400
-    
-    data = request.json
-    # Update displays
-    oled.show(data.get('oled_text', ''))
-    lcd.show(data.get('lcd_text', ''))
-    
-    return jsonify({"status": "success"})
+            elapsed = int(time.time() - start_time)
+            percent = int((correct / total) * 100) if total else 0
 
-if __name__ == '__main__':
-    if is_raspberry_pi():
-        app.run(host='0.0.0.0', port=5000)
-    else:
-        print("Not running on Raspberry Pi - Flask server not started")
+            show_oled_status(character, elapsed)
+            show_lcd_status(current, total, percent)
+
+            self._set_headers()
+            self.wfile.write(json.dumps({"ok": True}).encode())
+        else:
+            self._set_headers(404)
+            self.wfile.write(json.dumps({"error": "Not found"}).encode())
+
+def run(server_class=HTTPServer, handler_class=QuizHandler, port=5001):
+    server_address = ("", port)
+    httpd = server_class(server_address, handler_class)
+    print(f"📡 Display Server running on port {port}")
+    httpd.serve_forever()
+
+if __name__ == "__main__":
+    run()
