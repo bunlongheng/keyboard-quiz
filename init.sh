@@ -28,3 +28,9 @@ pi2@norden-pi:~/keyboard-quiz/backend $ npm install
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
+
+
+
+Pi Only 
+
+echo "cd ~/keyboard-quiz && source venv/bin/activate" >> ~/.bashrc

@@ -8,16 +8,16 @@ app = Flask(__name__)
 # Check if running on Raspberry Pi
 def is_raspberry_pi():
     try:
-        with open('/proc/cpuinfo', 'r') as cpuinfo:
-            for line in cpuinfo:
-                if line.startswith('Hardware'):
-                    _, value = line.strip().split(':', 1)
-                    value = value.strip()
-                    if value in ('BCM2708', 'BCM2709', 'BCM2711', 'BCM2835'):
-                        return True
-            return False
+        # Method 1: Check device tree model
+        with open('/proc/device-tree/model', 'r') as f:
+            return 'Raspberry Pi' in f.read()
     except:
-        return False
+        try:
+            # Method 2: Check cpuinfo for BCM (Broadcom) chip
+            with open('/proc/cpuinfo', 'r') as f:
+                return 'BCM' in f.read()
+        except:
+            return False
 
 # Only import hardware modules if on Raspberry Pi
 if is_raspberry_pi():
