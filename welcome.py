@@ -1,25 +1,34 @@
-import socket
 import time
+import netifaces
 from RPLCD.i2c import CharLCD
 
 class LCDDisplay:
     def __init__(self):
-        # Initialize LCD with your specific settings
         self.lcd = CharLCD('PCF8574', 0x27, cols=16, rows=2)
-    
-    def show_ip(self):
-        """Display hostname and IP on LCD"""
-        hostname = socket.gethostname()
-        ip = socket.gethostbyname(hostname)
-        self.lcd.clear()
-        self.lcd.write_string(f"Host: {hostname[:8]}\nIP: {ip}")
+        self.scroll_delay = 0.2  # Faster scroll
+
+    def get_wifi_ip(self):
+        """Get only wlan0 IP (your 10.0.0.201)"""
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+        except:
+            return "NO_WIFI"
+
+    def scroll_compact(self, text):
+        """Pure scrolling without labels"""
+        padded = " " * 16 + text + " " * 16
+        for i in range(len(padded) - 15):
+            self.lcd.clear()
+            self.lcd.write_string(padded[i:i+16])
+            time.sleep(self.scroll_delay)
+
+    def run(self):
+        while True:
+            self.scroll_compact(self.get_wifi_ip())  # Just the IP
 
 if __name__ == "__main__":
     display = LCDDisplay()
-    while True:
-        try:
-            display.show_ip()
-            time.sleep(10)  # Update every 10 seconds
-        except Exception as e:
-            print(f"Error: {e}")
-            time.sleep(5)  # Wait before retrying
+    try:
+        display.run()
+    except KeyboardInterrupt:
+        display.lcd.clear()
