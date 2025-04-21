@@ -1,4 +1,3 @@
-// pages/quiz.tsx — Confetti only if passing
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Confetti from 'react-confetti';
@@ -31,6 +30,17 @@ export default function QuizPage() {
   const currentQuestion: Question | undefined = questions[currentIndex];
   const passingScore = (score / questions.length) * 100 >= 70;
 
+  const correctSounds = [
+    typeof window !== 'undefined' ? new Audio('/sounds/correct.mp3') : null
+  ].filter(Boolean) as HTMLAudioElement[];
+
+  const wrongSounds = [
+    typeof window !== 'undefined' ? new Audio('/sounds/wrong.mp3') : null,
+    typeof window !== 'undefined' ? new Audio('/sounds/wrong2.mp3') : null,
+  ].filter(Boolean) as HTMLAudioElement[];
+
+  const congratsSound = typeof window !== 'undefined' ? new Audio('/sounds/congrats.mp3') : null;
+
   useEffect(() => {
     const stored = localStorage.getItem('sprunki');
     if (stored) setCharacter(JSON.parse(stored));
@@ -50,7 +60,15 @@ export default function QuizPage() {
       setLastKey(e.key);
       const correct = e.key.toLowerCase() === currentQuestion.key.toLowerCase();
       setFeedback(correct ? 'correct' : 'wrong');
-      if (correct) setScore((s) => s + 1);
+
+      if (correct) {
+        const sound = correctSounds[Math.floor(Math.random() * correctSounds.length)];
+        sound.play().catch(() => {});
+        setScore((s) => s + 1);
+      } else {
+        const sound = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
+        sound.play().catch(() => {});
+      }
 
       setTimeout(() => {
         setFeedback(null);
@@ -58,6 +76,9 @@ export default function QuizPage() {
           setCurrentIndex((i) => i + 1);
           setTimeLeft(60);
         } else {
+          if ((score + (correct ? 1 : 0)) / questions.length >= 0.7 && congratsSound) {
+            congratsSound.play().catch(() => {});
+          }
           setShowResult(true);
         }
       }, 800);
@@ -65,7 +86,7 @@ export default function QuizPage() {
 
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [currentQuestion, showResult]);
+  }, [currentIndex, currentQuestion, showResult]);
 
   const bgColor = character?.color || '#0f172a';
   const getImagePath = (name: string) =>
@@ -76,9 +97,12 @@ export default function QuizPage() {
       className="relative min-h-screen text-white p-6 flex flex-col items-center justify-center text-center"
       style={{ backgroundColor: bgColor }}
     >
-      {/* 4 Corner Info - now huge */}
-      <div className="absolute top-4 left-4 text-4xl font-bold text-white"> {currentIndex + 1}/{questions.length}</div>
-      <div className="absolute top-4 right-4 text-4xl font-bold text-white"> {(score / questions.length) * 100}%</div>
+      <div className="absolute top-4 left-4 text-4xl font-bold text-white">
+        {currentIndex + 1}/{questions.length}
+      </div>
+      <div className="absolute top-4 right-4 text-4xl font-bold text-white">
+        {(score / questions.length) * 100}%
+      </div>
       <div className="absolute bottom-4 left-4 text-4xl font-bold text-white">{timeLeft}s</div>
       <div className="absolute bottom-4 right-4 text-4xl font-bold text-white">{lastKey}</div>
 
@@ -92,7 +116,7 @@ export default function QuizPage() {
             className="mb-2"
           />
           <p className="text-sm text-white/90">
-           <span className="font-bold">{character.name}</span>
+            <span className="font-bold">{character.name}</span>
           </p>
         </div>
       )}
@@ -101,9 +125,13 @@ export default function QuizPage() {
         <>
           {passingScore && <Confetti />}
           <h1 className="text-4xl font-bold mb-4 text-green-400">🎉 Quiz Complete!</h1>
-          <p className={`text-4xl ${
-            passingScore ? 'bg-green-600' : 'bg-red-600'
-          } text-white px-4 py-2 rounded`}>Score: {(score / questions.length) * 100}%</p>
+          <p
+            className={`text-4xl ${
+              passingScore ? 'bg-green-600' : 'bg-red-600'
+            } text-white px-4 py-2 rounded`}
+          >
+            Score: {(score / questions.length) * 100}%
+          </p>
         </>
       ) : currentQuestion ? (
         <>
