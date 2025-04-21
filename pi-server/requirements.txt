@@ -1,8 +1,22 @@
+# Flask & Web Server
 Flask==2.3.2
 Werkzeug==2.3.7
 python-dotenv==1.0.0
-RPi.GPIO==0.7.1
-Adafruit_SSD1306==1.6.2
-Pillow==10.0.0
-smbus2==0.4.1
-adafruit-circuitpython-charlcd==3.3.9
+
+# Raspberry Pi GPIO
+RPi.GPIO==0.7.1 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+
+# I2C Communication
+smbus2==0.4.1 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+
+# OLED Displays (SSD1306)
+Adafruit_SSD1306==1.6.2 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+Pillow==10.0.0 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+adafruit-circuitpython-ssd1306==1.6.2 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+
+# Character LCDs (HD44780)
+adafruit-circuitpython-charlcd==3.3.9 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+adafruit-circuitpython-pcf8574==1.0.4 ; sys_platform == 'linux' and platform_machine == 'armv7l'
+
+# System Utilities
+gpiozero==1.6.2 ; sys_platform == 'linux' and platform_machine == 'armv7l'
