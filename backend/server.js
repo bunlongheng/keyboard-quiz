@@ -2,7 +2,6 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { updateDisplays } = require("./hardware/display");
 
 app.use(cors());
 app.use(express.json());
@@ -17,12 +16,6 @@ app.post("/select-character", (req, res) => {
 app.post("/quiz-feedback", (req, res) => {
     console.log("✅ Answer result:", req.body.correct ? "Correct" : "Wrong");
     res.send({ status: "ok" });
-});
-
-// NEW: Update screen displays
-app.post("/update-display", (req, res) => {
-    updateDisplays(req.body);
-    res.send({ status: "display updated" });
 });
 
 // Start server
