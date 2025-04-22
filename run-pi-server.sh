@@ -16,4 +16,4 @@ pip install -r requirements.txt
 
 # Run the display server
 echo "🚀 Running Display Server..."
-python app.py
+python app.pya

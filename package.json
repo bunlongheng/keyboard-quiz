@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "concurrently \"next dev\" \"node backend/server.js\"",
     "flask": "chmod +x ./run-pi-server.sh && ./run-pi-server.sh",
+    "welcome": "chmod +x ./welcome.sh && ./welcome.sh",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
