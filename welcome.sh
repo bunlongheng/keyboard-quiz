@@ -12,7 +12,7 @@ fi
 source venv/bin/activate
 
 # Install packages only if not already installed
-REQUIRED_PACKAGES=("RPLCD" "netifaces")
+REQUIRED_PACKAGES=("RPLCD" "netifaces" "smbus2")
 for pkg in "${REQUIRED_PACKAGES[@]}"; do
   pip show "$pkg" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
