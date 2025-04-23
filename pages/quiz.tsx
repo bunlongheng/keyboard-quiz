@@ -60,7 +60,7 @@ export default function QuizPage() {
     if (showResult) {
       const timer = setTimeout(() => {
         router.push('/');
-      }, 5000);
+      }, 60000);
       return () => clearTimeout(timer);
     }
   }, [showResult, router]);
