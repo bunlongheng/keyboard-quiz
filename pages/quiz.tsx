@@ -65,6 +65,17 @@ export default function QuizPage() {
     }
   }, [showResult, router]);
 
+
+  useEffect(() => {
+    if (showResult && passingScore) {
+      const theme = new Audio('/theme-song.mp3');
+      theme.volume = 0.7;
+      theme.play().catch((err) => {
+        console.warn('Theme song blocked:', err);
+      });
+    }
+  }, [showResult]);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (showResult || !currentQuestion) return;
