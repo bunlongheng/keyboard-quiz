@@ -15,23 +15,6 @@ export default function Home() {
   const [selected, setSelected] = useState<Character | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-  
-    const audio = new Audio('/theme-song.mp3');
-    audio.loop = true;
-    audio.volume = 0.6;
-  
-    audio.play().catch((err) => {
-      console.warn('Autoplay blocked:', err);
-    });
-  
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, []);
-
   const selectCharacter = async (char: Character) => {
     const withInitial = { ...char, initial: char.name[0] };
     setSelected(withInitial);

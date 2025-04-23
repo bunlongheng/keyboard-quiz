@@ -87,9 +87,16 @@ export default function QuizPage() {
           setCurrentIndex((i) => i + 1);
           setTimeLeft(60);
         } else {
-          if ((score + (correct ? 1 : 0)) / questions.length >= 0.7 && congratsSound) {
-            congratsSound.play().catch(() => {});
+          const finalScore = score + (correct ? 1 : 0);
+          const didPass = (finalScore / questions.length) >= 0.7;
+
+          if (didPass) {
+            localStorage.setItem('passed', 'true');
+            congratsSound?.play().catch(() => {});
+          } else {
+            localStorage.removeItem('passed');
           }
+
           setShowResult(true);
         }
       }, 800);
