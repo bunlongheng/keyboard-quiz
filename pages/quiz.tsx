@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Confetti from 'react-confetti';
 import fullSet from '../data/questions.json';
@@ -27,6 +28,7 @@ export default function QuizPage() {
   const [character, setCharacter] = useState<Character | null>(null);
   const [lastKey, setLastKey] = useState<string>('');
 
+  const router = useRouter();
   const currentQuestion: Question | undefined = questions[currentIndex];
   const passingScore = (score / questions.length) * 100 >= 70;
 
@@ -53,6 +55,15 @@ export default function QuizPage() {
     }, 1000);
     return () => clearInterval(timer);
   }, [showResult]);
+
+  useEffect(() => {
+    if (showResult) {
+      const timer = setTimeout(() => {
+        router.push('/');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showResult, router]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
