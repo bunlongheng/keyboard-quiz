@@ -41,6 +41,12 @@ export default function QuizPage() {
   const congratsSound = typeof window !== 'undefined' ? new Audio('/sounds/congrats.mp3') : null;
 
   useEffect(() => {
+    if (currentIndex >= questions.length && !showResult) {
+      setShowResult(true);
+    }
+  }, [currentIndex, questions.length, showResult]);
+
+  useEffect(() => {
     if (showResult) return;
     const timer = setInterval(() => {
       setTimeLeft((t) => {
