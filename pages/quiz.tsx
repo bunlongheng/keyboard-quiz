@@ -126,6 +126,14 @@ export default function QuizPage() {
       className="relative min-h-screen text-white p-6 flex flex-col items-center justify-center text-center"
       style={{ backgroundColor: bgColor }}
     >
+
+<input
+  id="mobileInput"
+  type="text"
+  className="opacity-0 absolute top-0 left-0"
+  autoFocus
+  inputMode="text"
+/>
       <div className="absolute top-4 left-4 text-4xl font-bold text-white">
         {currentIndex + 1}/{questions.length}
       </div>
