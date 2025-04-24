@@ -24,7 +24,7 @@ export default function QuizPage() {
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [showResult, setShowResult] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [character, setCharacter] = useState<Character | null>(null);
@@ -81,6 +81,19 @@ export default function QuizPage() {
       });
     }
   }, [showResult]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { name, color, type } = router.query;
+  
+    if (name && color && type) {
+      setCharacter({
+        name: String(name),
+        color: String(color),
+        type: String(type),
+      });
+    }
+  }, [router.isReady, router.query]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -215,7 +228,7 @@ export default function QuizPage() {
         </>
       ) : currentQuestion ? (
         <>
-      <h2 className="text-[200px] sm:text-[240px] md:text-[280px] lg:text-[300px] font-extrabold text-yellow-100">
+      <h2 className="text-[200px] sm:text-[240px] md:text-[280px] lg:text-[300px] font-extrabold text-yellow-100" style={{ WebkitTextStroke: '.4px black' }}>
   {currentQuestion.display}
 </h2>
           {feedback === 'correct' && <p className="text-green-300 text-3xl mt-4">✅ Correct!</p>}

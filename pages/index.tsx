@@ -26,7 +26,15 @@ export default function Home() {
       body: JSON.stringify(withInitial),
     });
 
-    router.push('/quiz');
+    router.push({
+      pathname: '/quiz',
+      query: {
+        name: withInitial.name,
+        color: withInitial.color,
+        type: withInitial.type,
+        initial: withInitial.initial,
+      },
+    });
   };
 
   const getImagePath = (name: string) =>
