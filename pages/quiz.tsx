@@ -78,7 +78,7 @@ export default function QuizPage() {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (showResult || !currentQuestion || currentIndex >= questions.length) return;
+      if (showResult || !currentQuestion) return;
       setLastKey(e.key);
       const correct = e.key.toLowerCase() === currentQuestion.key.toLowerCase();
       setFeedback(correct ? 'correct' : 'wrong');
