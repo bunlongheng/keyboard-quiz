@@ -157,13 +157,23 @@ export default function QuizPage() {
       <input id="mobileInput" type="text" className="opacity-0 absolute top-0 left-0" autoFocus inputMode="text" />
 
       <div className="absolute top-4 left-4 text-4xl font-bold text-white">
-        {Math.min(currentIndex + 1, questions.length)}/{questions.length}
+      <a
+      href="/"
+      className="absolute top-4 left-1 text-white text-3xl hover:text-yellow-300 transition"
+      title="Back to Home"
+    >
+      🏠
+    </a>
       </div>
+
+      
       <div className="absolute top-4 right-4 text-4xl font-bold text-white">
         {(score / questions.length) * 100}%
       </div>
       <div className="absolute bottom-4 left-4 text-4xl font-bold text-white">{timeLeft}s</div>
-      <div className="absolute bottom-4 right-4 text-4xl font-bold text-white">{lastKey}</div>
+      <div className="absolute bottom-4 right-4 text-4xl font-bold text-white">{Math.min(currentIndex + 1, questions.length)}/{questions.length}</div>
+
+     
 
       {character && (
   <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
