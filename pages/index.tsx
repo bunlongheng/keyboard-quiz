@@ -58,9 +58,10 @@ export default function Home() {
             key={char.name}
             onClick={() => selectCharacter(char)}
             onMouseEnter={() => playHoverSound(char.name, char.color)}
-            className={`p-3 h-36 rounded shadow text-center ${
-              selected?.name === char.name ? 'ring-4 ring-yellow-300' : ''
-            } transition-transform duration-150 transform hover:scale-102`}
+            className={`p-3 rounded shadow text-center flex flex-col justify-center items-center 
+              h-[150px] sm:h-[170px] md:h-[180px] lg:h-[200px] 
+              ${selected?.name === char.name ? 'ring-4 ring-yellow-300' : ''} 
+              transition-transform duration-150 transform hover:scale-102`}
             style={{ backgroundColor: char.color }}
           >
             <Image
@@ -70,7 +71,18 @@ export default function Home() {
               height={48}
               className="mx-auto mb-1"
             />
-            <p className="text-base font-semibold text-white" style={{ WebkitTextStroke: '.4px black' }}>{char.name}</p>
+            
+
+            <div className="text-center">
+  <p className="text-white text-lg font-bold" style={{ WebkitTextStroke: '.4px black' }}>
+    {char.name}
+  </p>
+  <span className="inline-block mt-1 px-3 py-1 rounded-full border border-white text-white text-xs font-semibold uppercase tracking-wide">
+  {char.type}
+</span>
+</div>
+
+
           </button>
         ))}
       </div>
