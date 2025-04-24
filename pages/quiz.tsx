@@ -13,7 +13,7 @@ interface Character {
   name: string;
   type: string;
   color: string;
-  description: string,
+  description: string;
   initial?: string;
 }
 
@@ -25,11 +25,10 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [character, setCharacter] = useState<Character | null>(null);
-  const [lastKey, setLastKey] = useState<string>('');
   const [shake, setShake] = useState(false);
 
   const router = useRouter();
-  const currentQuestion: Question | undefined = questions[currentIndex];
+  const currentQuestion = questions[currentIndex];
   const passingScore = (score / questions.length) * 100 >= 70;
 
   const correctSounds = [typeof window !== 'undefined' ? new Audio('/sounds/correct.mp3') : null].filter(Boolean) as HTMLAudioElement[];
@@ -37,23 +36,17 @@ export default function QuizPage() {
     typeof window !== 'undefined' ? new Audio('/sounds/wrong.mp3') : null,
     typeof window !== 'undefined' ? new Audio('/sounds/wrong2.mp3') : null,
   ].filter(Boolean) as HTMLAudioElement[];
-
   const congratsSound = typeof window !== 'undefined' ? new Audio('/sounds/congrats.mp3') : null;
 
   useEffect(() => {
-    if (currentIndex >= questions.length && !showResult) {
-      setShowResult(true);
-    }
+    if (currentIndex >= questions.length && !showResult) setShowResult(true);
   }, [currentIndex, questions.length, showResult]);
 
   useEffect(() => {
     if (showResult) return;
     const timer = setInterval(() => {
       setTimeLeft((t) => {
-        if (t === 21) {
-          const warning = new Audio('/sounds/warning.mp3');
-          warning.play().catch(() => {});
-        }
+        if (t === 21) new Audio('/sounds/warning.mp3').play().catch(() => {});
         if (t === 11) {
           setShake(true);
           setTimeout(() => setShake(false), 2500);
@@ -70,9 +63,7 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (showResult) {
-      const timer = setTimeout(() => {
-        router.push('/');
-      }, 60000);
+      const timer = setTimeout(() => router.push('/'), 60000);
       return () => clearTimeout(timer);
     }
   }, [showResult, router]);
@@ -81,16 +72,13 @@ export default function QuizPage() {
     if (showResult && passingScore) {
       const theme = new Audio('/theme-song.mp3');
       theme.volume = 0.7;
-      theme.play().catch((err) => {
-        console.warn('Theme song blocked:', err);
-      });
+      theme.play().catch(() => {});
     }
-  }, [showResult]);
+  }, [showResult, passingScore]);
 
   useEffect(() => {
     if (!router.isReady) return;
     const { name, color, type, description } = router.query;
-  
     if (name && color && type && description) {
       setCharacter({
         name: String(name),
@@ -101,107 +89,78 @@ export default function QuizPage() {
     }
   }, [router.isReady, router.query]);
 
-
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (showResult || !currentQuestion) return;
-      setLastKey(e.key);
       const correct = e.key.toLowerCase() === currentQuestion.key.toLowerCase();
       setFeedback(correct ? 'correct' : 'wrong');
-
-      if (correct) {
-        const sound = correctSounds[Math.floor(Math.random() * correctSounds.length)];
-        sound.play().catch(() => {});
-        setScore((s) => s + 1);
-      } else {
-        const sound = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
-        sound.play().catch(() => {});
-      }
-
+      const sound = correct
+        ? correctSounds[Math.floor(Math.random() * correctSounds.length)]
+        : wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
+      sound.play().catch(() => {});
+      if (correct) setScore((s) => s + 1);
       setTimeout(() => {
         setFeedback(null);
         if (currentIndex + 1 < questions.length) {
           setCurrentIndex((i) => i + 1);
           setTimeLeft(30);
         } else {
-          const finalScore = score + (correct ? 1 : 0);
-          const didPass = (finalScore / questions.length) >= 0.7;
-          if (didPass) congratsSound?.play().catch(() => {});
+          if ((score + (correct ? 1 : 0)) / questions.length >= 0.7) congratsSound?.play().catch(() => {});
           setShowResult(true);
         }
       }, 800);
     };
-
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [currentIndex, currentQuestion, showResult]);
-
-  const bgColor = character?.color || '#0f172a';
-  const getImagePath = (name: string) => `/characters/sprunki/${name.replace(/\./g, '').replace(/\s+/g, ' ')}.svg`;
+  }, [currentIndex, currentQuestion, showResult, correctSounds, wrongSounds, score]);
 
   const handleTimeout = () => {
     if (!currentQuestion || showResult) return;
     setFeedback('wrong');
-    const sound = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
-    sound.play().catch(() => {});
+    wrongSounds[Math.floor(Math.random() * wrongSounds.length)]?.play().catch(() => {});
     setTimeout(() => {
       setFeedback(null);
       if (currentIndex + 1 < questions.length) {
         setCurrentIndex((i) => i + 1);
         setTimeLeft(30);
       } else {
-        const finalScore = score;
-        const didPass = (finalScore / questions.length) >= 0.7;
-        if (didPass) congratsSound?.play().catch(() => {});
+        if (score / questions.length >= 0.7) congratsSound?.play().catch(() => {});
         setShowResult(true);
       }
     }, 800);
   };
 
+  const bgColor = character?.color || '#0f172a';
+  const getImagePath = (name: string) => `/characters/sprunki/${name.replace(/\./g, '').replace(/\s+/g, ' ')}.svg`;
+
   return (
     <div className="relative min-h-screen text-white p-6 flex flex-col items-center justify-center text-center" style={{ backgroundColor: bgColor }}>
       <input id="mobileInput" type="text" className="opacity-0 absolute top-0 left-0" autoFocus inputMode="text" />
 
-      <div className="absolute top-4 left-4 text-4xl font-bold text-white">
       <a
-      href="/"
-      className="absolute top-4 left-1 text-white text-3xl hover:text-yellow-300 transition"
-      title="Back to Home"
-    >
-      🏠
-    </a>
-      </div>
+        href="/"
+        className="absolute top-4 left-1 text-white text-3xl hover:text-yellow-300 transition"
+        title="Back to Home"
+      >
+        🏡
+      </a>
 
-      
       <div className="absolute top-4 right-4 text-4xl font-bold text-white">
         {(score / questions.length) * 100}%
       </div>
       <div className="absolute bottom-4 left-4 text-4xl font-bold text-white">{timeLeft}s</div>
       <div className="absolute bottom-4 right-4 text-4xl font-bold text-white">{Math.min(currentIndex + 1, questions.length)}/{questions.length}</div>
 
-     
-
       {character && (
-  <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
-    <Image
-      src={getImagePath(character.name)}
-      alt={character.name}
-      width={64}
-      height={64}
-      className="mb-2"
-    />
-    <p className="text-white text-lg font-bold" style={{ WebkitTextStroke: '.4px black' }}>
-      {character.name}
-    </p>
-    <span className="mt-1 px-3 py-1 rounded-full border border-white text-white text-xs font-semibold uppercase tracking-wide">
-      {character.type}
-    </span>
-
-    <p className="text-xs text-center mt-1 leading-snug px-1">
-  {character.description}
-</p>
-  </div>
-)}
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
+          <Image src={getImagePath(character.name)} alt={character.name} width={64} height={64} className="mb-2" />
+          <p className="text-white text-lg font-bold" style={{ WebkitTextStroke: '.4px black' }}>{character.name}</p>
+          <span className="mt-1 px-3 py-1 rounded-full border border-white text-white text-xs font-semibold uppercase tracking-wide">
+            {character.type}
+          </span>
+          <p className="text-xs text-center mt-1 leading-snug px-1">{character.description}</p>
+        </div>
+      )}
 
       {showResult ? (
         <>
@@ -216,7 +175,6 @@ export default function QuizPage() {
         </>
       ) : currentQuestion ? (
         <>
-
           <h2 className={`text-[200px] sm:text-[240px] md:text-[280px] lg:text-[300px] font-extrabold text-yellow-100 ${shake ? 'shake' : ''}`} style={{ WebkitTextStroke: '.4px black' }}>
             {currentQuestion.display}
           </h2>
