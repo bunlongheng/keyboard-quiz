@@ -174,8 +174,8 @@ export default function QuizPage() {
         </>
       ) : currentQuestion ? (
         <>
-          <h2 className="text-[100px] font-extrabold text-yellow-100">
-            {currentQuestion.display}
+      <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-[100px] font-extrabold text-yellow-100">
+      {currentQuestion.display}
           </h2>
           {feedback === 'correct' && <p className="text-green-300 text-3xl mt-4">✅ Correct!</p>}
           {feedback === 'wrong' && <p className="text-red-300 text-3xl mt-4">❌ Wrong</p>}
