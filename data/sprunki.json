@@ -1,26 +1,25 @@
 [
-    { "name": "Oren", "type": "Beats", "color": "#f87e30" },
-    { "name": "Raddy", "type": "Beats", "color": "#e44735" },
-    { "name": "Clukr", "type": "Beats", "color": "#d5d5d5" },
-    { "name": "Fun Bot", "type": "Beats", "color": "#b6e5f5" },
-    { "name": "Vineria", "type": "Beats", "color": "#90d88b" },
-  
-    { "name": "Gray", "type": "Effects", "color": "#606060" },
-    { "name": "Brud", "type": "Effects", "color": "#cfa372" },
-    { "name": "Garnold", "type": "Effects", "color": "#f4c860" },
-    { "name": "OWAKCX", "type": "Effects", "color": "#d7ff65" },
-    { "name": "Sky", "type": "Effects", "color": "#c2f5ff" },
-  
-    { "name": "MrSun", "type": "Melody", "color": "#ffe14d" },
-    { "name": "Durple", "type": "Melody", "color": "#cc99ff" },
-    { "name": "MrTree", "type": "Melody", "color": "#6ecc71" },
-    { "name": "Simon", "type": "Melody", "color": "#fada69" },
-    { "name": "Tunner", "type": "Melody", "color": "#d1a26b" },
-  
-    { "name": "Funcomputer", "type": "Vocal", "color": "#000000" },
-    { "name": "Wenda", "type": "Vocal", "color": "#ffffff" },
-    { "name": "Pinki", "type": "Vocal", "color": "#ffbbd7" },
-    { "name": "Jevin", "type": "Vocal", "color": "#99aaff" },
-    { "name": "Black", "type": "Vocal", "color": "#2d2d2d" }
-  ]
-  
+  { "name": "Oren", "type": "Beats", "color": "#f87e30", "description": "Oren can drum a beat on anything—even a lunchbox!" },
+  { "name": "Raddy", "type": "Beats", "color": "#e44735", "description": "Raddy’s rhythms are so spicy, they sizzle!" },
+  { "name": "Clukr", "type": "Beats", "color": "#d5d5d5", "description": "Clukr lays down beats with robotic precision." },
+  { "name": "Fun Bot", "type": "Beats", "color": "#b6e5f5", "description": "Fun Bot powers every party with non-stop bass." },
+  { "name": "Vineria", "type": "Beats", "color": "#90d88b", "description": "Vineria grooves like vines dancing in the wind." },
+
+  { "name": "Gray", "type": "Effects", "color": "#606060", "description": "Gray turns silence into cinematic sound magic." },
+  { "name": "Brud", "type": "Effects", "color": "#cfa372", "description": "Brud adds the ‘whoosh’ to your coolest transitions." },
+  { "name": "Garnold", "type": "Effects", "color": "#f4c860", "description": "Garnold’s glitch effects are legendary in the remix world." },
+  { "name": "OWAKCX", "type": "Effects", "color": "#d7ff65", "description": "OWAKCX warps sound like a sonic wizard." },
+  { "name": "Sky", "type": "Effects", "color": "#c2f5ff", "description": "Sky adds shimmer and echo that feel like flying." },
+
+  { "name": "MrSun", "type": "Melody", "color": "#ffe14d", "description": "MrSun shines through every melody with joy." },
+  { "name": "Durple", "type": "Melody", "color": "#cc99ff", "description": "Durple’s dreamy melodies sound like cotton candy skies." },
+  { "name": "MrTree", "type": "Melody", "color": "#6ecc71", "description": "MrTree’s tunes grow strong and peaceful like a forest." },
+  { "name": "Simon", "type": "Melody", "color": "#fada69", "description": "Simon composes melodies that make everyone smile." },
+  { "name": "Tunner", "type": "Melody", "color": "#d1a26b", "description": "Tunner's melodies are timeless like a vinyl record." },
+
+  { "name": "Funcomputer", "type": "Vocal", "color": "#000000", "description": "Funcomputer sings in autotune like a pixelated popstar." },
+  { "name": "Wenda", "type": "Vocal", "color": "#ffffff", "description": "Wenda’s voice floats like a feather in the air." },
+  { "name": "Pinki", "type": "Vocal", "color": "#ffbbd7", "description": "Pinki belts out big vocals with tiny diva energy!" },
+  { "name": "Jevin", "type": "Vocal", "color": "#99aaff", "description": "Jevin sings like a synthwave lullaby." },
+  { "name": "Black", "type": "Vocal", "color": "#2d2d2d", "description": "Black’s deep voice sounds like midnight poetry." }
+]

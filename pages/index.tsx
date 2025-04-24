@@ -8,6 +8,7 @@ interface Character {
   name: string;
   type: string;
   color: string;
+  description: string;
   initial?: string;
 }
 
@@ -32,6 +33,7 @@ export default function Home() {
         name: withInitial.name,
         color: withInitial.color,
         type: withInitial.type,
+        description: withInitial.description,
         initial: withInitial.initial,
       },
     });

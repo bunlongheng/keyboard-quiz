@@ -13,6 +13,7 @@ interface Character {
   name: string;
   type: string;
   color: string;
+  description: string,
   initial?: string;
 }
 
@@ -82,15 +83,18 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { name, color, type } = router.query;
-    if (name && color && type) {
+    const { name, color, type, description } = router.query;
+  
+    if (name && color && type && description) {
       setCharacter({
         name: String(name),
         color: String(color),
         type: String(type),
+        description: String(description),
       });
     }
   }, [router.isReady, router.query]);
+
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -176,6 +180,10 @@ export default function QuizPage() {
     <span className="mt-1 px-3 py-1 rounded-full border border-white text-white text-xs font-semibold uppercase tracking-wide">
       {character.type}
     </span>
+
+    <p className="text-xs text-center mt-1 leading-snug px-1">
+  {character.description}
+</p>
   </div>
 )}
 
