@@ -19,7 +19,9 @@ interface Character {
 const shuffled = [...fullSet].sort(() => Math.random() - 0.5).slice(0, 10);
 
 export default function QuizPage() {
-  const [questions] = useState(shuffled);
+  const [questions] = useState(() =>
+    [...fullSet].sort(() => Math.random() - 0.5).slice(0, 10)
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
