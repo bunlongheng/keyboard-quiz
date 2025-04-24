@@ -46,14 +46,8 @@ export default function QuizPage() {
   const congratsSound = typeof window !== 'undefined' ? new Audio('/sounds/congrats.mp3') : null;
 
   useEffect(() => {
-    const stored = localStorage.getItem('sprunki');
-    if (stored) setCharacter(JSON.parse(stored));
-  }, []);
-
-  useEffect(() => {
     if (showResult) return;
     
-
     const timer = setInterval(() => {
       setTimeLeft((t) => {
         if (t <= 1) {
@@ -108,7 +102,7 @@ export default function QuizPage() {
         setFeedback(null);
         if (currentIndex + 1 < questions.length) {
           setCurrentIndex((i) => i + 1);
-          setTimeLeft(60);
+          setTimeLeft(30);
         } else {
           const finalScore = score + (correct ? 1 : 0);
           const didPass = (finalScore / questions.length) >= 0.7;
@@ -212,9 +206,9 @@ export default function QuizPage() {
         </>
       ) : currentQuestion ? (
         <>
-      <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-[100px] font-extrabold text-yellow-100">
-      {currentQuestion.display}
-          </h2>
+      <h2 className="text-[200px] sm:text-[240px] md:text-[280px] lg:text-[300px] font-extrabold text-yellow-100">
+  {currentQuestion.display}
+</h2>
           {feedback === 'correct' && <p className="text-green-300 text-3xl mt-4">✅ Correct!</p>}
           {feedback === 'wrong' && <p className="text-red-300 text-3xl mt-4">❌ Wrong</p>}
         </>

@@ -43,7 +43,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">Choose Your Character</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Select Sprunki</h1>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {characters.map((char: Character) => (
           <button
@@ -62,7 +62,7 @@ export default function Home() {
               height={48}
               className="mx-auto mb-1"
             />
-            <p className="text-base font-semibold text-white">{char.name}</p>
+            <p className="text-base font-semibold text-white" style={{ WebkitTextStroke: '.4px black' }}>{char.name}</p>
           </button>
         ))}
       </div>
