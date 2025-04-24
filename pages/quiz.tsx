@@ -1,13 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback,useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Confetti from 'react-confetti';
 import fullSet from '../data/questions.json';
-
-interface Question {
-  display: string;
-  key: string;
-}
+import Link from 'next/link';
 
 interface Character {
   name: string;
@@ -36,7 +32,34 @@ export default function QuizPage() {
     typeof window !== 'undefined' ? new Audio('/sounds/wrong.mp3') : null,
     typeof window !== 'undefined' ? new Audio('/sounds/wrong2.mp3') : null,
   ].filter(Boolean) as HTMLAudioElement[];
-  const congratsSound = typeof window !== 'undefined' ? new Audio('/sounds/congrats.mp3') : null;
+  
+
+  const congratsSound = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return new Audio('/sounds/congrats.mp3');
+    }
+    return null;
+  }, []);
+
+
+const handleTimeout = useCallback(() => {
+  if (!currentQuestion || showResult) return;
+  setFeedback('wrong');
+  const sound = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
+  sound.play().catch(() => {});
+  setTimeout(() => {
+    setFeedback(null);
+    if (currentIndex + 1 < questions.length) {
+      setCurrentIndex((i) => i + 1);
+      setTimeLeft(30);
+    } else {
+      const finalScore = score;
+      const didPass = (finalScore / questions.length) >= 0.7;
+      if (didPass) congratsSound?.play().catch(() => {});
+      setShowResult(true);
+    }
+  }, 800);
+}, [currentQuestion, showResult, currentIndex, questions.length, score, wrongSounds, congratsSound]);
 
   useEffect(() => {
     if (currentIndex >= questions.length && !showResult) setShowResult(true);
@@ -59,7 +82,7 @@ export default function QuizPage() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [showResult]);
+  }, [showResult,handleTimeout ]);
 
   useEffect(() => {
     if (showResult) {
@@ -69,12 +92,14 @@ export default function QuizPage() {
   }, [showResult, router]);
 
   useEffect(() => {
-    if (showResult && passingScore) {
+    if (showResult && passingScore && congratsSound) {
       const theme = new Audio('/theme-song.mp3');
       theme.volume = 0.7;
-      theme.play().catch(() => {});
+      theme.play().catch((err) => {
+        console.warn('Theme song blocked:', err);
+      });
     }
-  }, [showResult, passingScore]);
+  }, [showResult, passingScore, congratsSound]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -114,21 +139,7 @@ export default function QuizPage() {
     return () => window.removeEventListener('keydown', handleKey);
   }, [currentIndex, currentQuestion, showResult, correctSounds, wrongSounds, score]);
 
-  const handleTimeout = () => {
-    if (!currentQuestion || showResult) return;
-    setFeedback('wrong');
-    wrongSounds[Math.floor(Math.random() * wrongSounds.length)]?.play().catch(() => {});
-    setTimeout(() => {
-      setFeedback(null);
-      if (currentIndex + 1 < questions.length) {
-        setCurrentIndex((i) => i + 1);
-        setTimeLeft(30);
-      } else {
-        if (score / questions.length >= 0.7) congratsSound?.play().catch(() => {});
-        setShowResult(true);
-      }
-    }, 800);
-  };
+  
 
   const bgColor = character?.color || '#0f172a';
   const getImagePath = (name: string) => `/characters/sprunki/${name.replace(/\./g, '').replace(/\s+/g, ' ')}.svg`;
@@ -137,13 +148,9 @@ export default function QuizPage() {
     <div className="relative min-h-screen text-white p-6 flex flex-col items-center justify-center text-center" style={{ backgroundColor: bgColor }}>
       <input id="mobileInput" type="text" className="opacity-0 absolute top-0 left-0" autoFocus inputMode="text" />
 
-      <a
-        href="/"
-        className="absolute top-4 left-1 text-white text-3xl hover:text-yellow-300 transition"
-        title="Back to Home"
-      >
-        🏡
-      </a>
+      <Link href="/" className="absolute top-4 left-1 text-white text-3xl hover:text-yellow-300 transition" title="Back to Home">
+  🏠
+</Link>
 
       <div className="absolute top-4 right-4 text-4xl font-bold text-white">
         {(score / questions.length) * 100}%
@@ -169,9 +176,9 @@ export default function QuizPage() {
           <p className={`text-4xl ${passingScore ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-2 rounded`}>
             Score: {(score / questions.length) * 100}%
           </p>
-          <a href="/" className="mt-8 inline-block px-6 py-3 bg-white text-black text-lg font-bold rounded hover:bg-gray-200 transition">
-            ⬅ Back to Home
-          </a>
+          <Link href="/" className="mt-8 inline-block px-6 py-3 bg-white text-black text-lg font-bold rounded hover:bg-gray-200 transition">
+  ⬅ Back to Home
+</Link>
         </>
       ) : currentQuestion ? (
         <>
