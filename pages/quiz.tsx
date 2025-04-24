@@ -52,9 +52,19 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (showResult) return;
+    
+
     const timer = setInterval(() => {
-      setTimeLeft((t) => (t > 0 ? t - 1 : 0));
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          handleTimeout();
+          return 0;
+        }
+        return t - 1;
+      });
     }, 1000);
+
+
     return () => clearInterval(timer);
   }, [showResult]);
 
@@ -122,6 +132,34 @@ export default function QuizPage() {
   const bgColor = character?.color || '#0f172a';
   const getImagePath = (name: string) =>
     `/characters/sprunki/${name.replace(/\./g, '').replace(/\s+/g, ' ')}.svg`;
+
+  const handleTimeout = () => {
+    if (!currentQuestion || showResult) return;
+  
+    setFeedback('wrong');
+    const sound = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
+    sound.play().catch(() => {});
+  
+    setTimeout(() => {
+      setFeedback(null);
+      if (currentIndex + 1 < questions.length) {
+        setCurrentIndex((i) => i + 1);
+        setTimeLeft(60);
+      } else {
+        const finalScore = score;
+        const didPass = (finalScore / questions.length) >= 0.7;
+  
+        if (didPass) {
+          localStorage.setItem('passed', 'true');
+          congratsSound?.play().catch(() => {});
+        } else {
+          localStorage.removeItem('passed');
+        }
+  
+        setShowResult(true);
+      }
+    }, 800);
+  };
 
   return (
     <div
