@@ -203,6 +203,15 @@ export default function QuizPage() {
           >
             Score: {(score / questions.length) * 100}%
           </p>
+
+          <a
+  href="/"
+  className="mt-8 inline-block px-6 py-3 bg-white text-black text-lg font-bold rounded hover:bg-gray-200 transition"
+>
+  ⬅ Back to Home
+</a>
+
+
         </>
       ) : currentQuestion ? (
         <>
