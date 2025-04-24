@@ -144,7 +144,7 @@ export default function QuizPage() {
       setFeedback(null);
       if (currentIndex + 1 < questions.length) {
         setCurrentIndex((i) => i + 1);
-        setTimeLeft(60);
+        setTimeLeft(30);
       } else {
         const finalScore = score;
         const didPass = (finalScore / questions.length) >= 0.7;
@@ -175,7 +175,7 @@ export default function QuizPage() {
   inputMode="text"
 />
       <div className="absolute top-4 left-4 text-4xl font-bold text-white">
-        {currentIndex + 1}/{questions.length}
+      {Math.min(currentIndex + 1, questions.length)}/{questions.length}
       </div>
       <div className="absolute top-4 right-4 text-4xl font-bold text-white">
         {(score / questions.length) * 100}%
