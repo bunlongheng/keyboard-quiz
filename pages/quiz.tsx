@@ -162,13 +162,22 @@ export default function QuizPage() {
       <div className="absolute bottom-4 right-4 text-4xl font-bold text-white">{lastKey}</div>
 
       {character && (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
-          <Image src={getImagePath(character.name)} alt={character.name} width={64} height={64} className="mb-2" />
-          <p className="text-sm text-white/90">
-            <span className="font-bold">{character.name}</span>
-          </p>
-        </div>
-      )}
+  <div className="absolute top-16 left-1/2 -translate-x-1/2 flex flex-col items-center">
+    <Image
+      src={getImagePath(character.name)}
+      alt={character.name}
+      width={64}
+      height={64}
+      className="mb-2"
+    />
+    <p className="text-white text-lg font-bold" style={{ WebkitTextStroke: '.4px black' }}>
+      {character.name}
+    </p>
+    <span className="mt-1 px-3 py-1 rounded-full border border-white text-white text-xs font-semibold uppercase tracking-wide">
+      {character.type}
+    </span>
+  </div>
+)}
 
       {showResult ? (
         <>
@@ -183,6 +192,7 @@ export default function QuizPage() {
         </>
       ) : currentQuestion ? (
         <>
+
           <h2 className={`text-[200px] sm:text-[240px] md:text-[280px] lg:text-[300px] font-extrabold text-yellow-100 ${shake ? 'shake' : ''}`} style={{ WebkitTextStroke: '.4px black' }}>
             {currentQuestion.display}
           </h2>

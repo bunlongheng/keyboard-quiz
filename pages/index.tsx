@@ -73,16 +73,10 @@ export default function Home() {
             />
             
 
-            <div className="text-center">
+   
   <p className="text-white text-lg font-bold" style={{ WebkitTextStroke: '.4px black' }}>
     {char.name}
   </p>
-  <span className="inline-block mt-1 px-3 py-1 rounded-full border border-white text-white text-xs font-semibold uppercase tracking-wide">
-  {char.type}
-</span>
-</div>
-
-
           </button>
         ))}
       </div>
